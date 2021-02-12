@@ -3,25 +3,22 @@
 const Sequelize = require('sequelize');
 const DataTypes = Sequelize.DataTypes;
 const userModel = require('./users.model');
+const blogModel = require('./blogs.model');
 
 module.exports = function (app) {
   const sequelizeClient = app.get('sequelizeClient');
-  const blog = sequelizeClient.define('blog', {
+  const comments = sequelizeClient.define('comments', {
     user_id: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: false
     },
-    title: {
-      type: DataTypes.STRING,
+    blog_id: {
+      type: DataTypes.INTEGER,
       allowNull: false
     },
-    texto: {
-      type: DataTypes.TEXT,
-      allowNull: false
-    },
-    main_image: {
+    text: {
       type: DataTypes.STRING,
-      allowNull: true
+      allowNull: false
     }
   }, {
     hooks: {
@@ -32,10 +29,18 @@ module.exports = function (app) {
   });
 
   // eslint-disable-next-line no-unused-vars
-  blog.associate = function (models) {
+  comments.associate = function (models) {
+    comments.belongsTo(userModel(app), {
+      foreignKey: "user_id",
+      onDelete: "RESTRICT",
+    });
+    comments.belongsTo(blogModel(app), {
+      foreignKey: "blog_id",
+      onDelete: "RESTRICT",
+    });
     // Define associations here
     // See http://docs.sequelizejs.com/en/latest/docs/associations/
   };
 
-  return blog;
+  return comments;
 };

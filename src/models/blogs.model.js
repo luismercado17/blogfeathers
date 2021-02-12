@@ -6,16 +6,16 @@ const userModel = require('./users.model');
 
 module.exports = function (app) {
   const sequelizeClient = app.get('sequelizeClient');
-  const blog = sequelizeClient.define('blog', {
+  const blogs = sequelizeClient.define('blogs', {
     user_id: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: false
     },
     title: {
       type: DataTypes.STRING,
       allowNull: false
     },
-    texto: {
+    text: {
       type: DataTypes.TEXT,
       allowNull: false
     },
@@ -32,10 +32,14 @@ module.exports = function (app) {
   });
 
   // eslint-disable-next-line no-unused-vars
-  blog.associate = function (models) {
+  blogs.associate = function (models) {
+    blogs.belongsTo(userModel(app), {
+      foreignKey: "user_id",
+      onDelete: "RESTRICT",
+    });
     // Define associations here
     // See http://docs.sequelizejs.com/en/latest/docs/associations/
   };
 
-  return blog;
+  return blogs;
 };
