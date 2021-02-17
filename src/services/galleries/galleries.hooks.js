@@ -5,19 +5,27 @@ const joinsResolves = {
   joins: {
     join: () => async (records, context) => {
       // let
-      records.user = await context.app
-        .service("users")
-        .getModel()
-        .findOne({
-          where: { id: records.user_id},
-        });
+      [records.user, records.blog] = await Promise.all([
+        context.app
+          .service("users")
+          .getModel()
+          .findOne({
+            where: { id: records.user_id},
+          }),
+        context.app
+          .service("blogs")
+          .getModel()
+          .findOne({
+            where: { id: records.blog_id},
+          }),
+      ]);
     },
   },
 };
 
 module.exports = {
   before: {
-    all: [],
+    all: [ ],
     find: [],
     get: [],
     create: [authenticate('jwt')],

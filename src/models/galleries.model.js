@@ -2,26 +2,23 @@
 // for more of what you can do here.
 const Sequelize = require('sequelize');
 const DataTypes = Sequelize.DataTypes;
-const usuario = require('./users.model');
+const userModel = require('./users.model');
+const blogModel = require('./blogs.model');
 
 module.exports = function (app) {
   const sequelizeClient = app.get('sequelizeClient');
-  const blogs = sequelizeClient.define('blogs', {
+  const galleries = sequelizeClient.define('galleries', {
     user_id: {
       type: DataTypes.INTEGER,
       allowNull: false
     },
-    title: {
-      type: DataTypes.STRING,
+    blog_id: {
+      type: DataTypes.INTEGER,
       allowNull: false
     },
-    text: {
-      type: DataTypes.TEXT,
-      allowNull: false
-    },
-    main_image: {
+    gallery_image: {
       type: DataTypes.STRING,
-      allowNull: true
+      allowNull: false
     }
   }, {
     hooks: {
@@ -32,14 +29,18 @@ module.exports = function (app) {
   });
 
   // eslint-disable-next-line no-unused-vars
-  blogs.associate = function (models) {
-    blogs.belongsTo(usuario(app), {
+  galleries.associate = function (models) {
+    galleries.belongsTo(userModel(app), {
       foreignKey: "user_id",
+      onDelete: "RESTRICT",
+    });
+    galleries.belongsTo(blogModel(app), {
+      foreignKey: "blog_id",
       onDelete: "RESTRICT",
     });
     // Define associations here
     // See http://docs.sequelizejs.com/en/latest/docs/associations/
   };
 
-  return blogs;
+  return galleries;
 };
