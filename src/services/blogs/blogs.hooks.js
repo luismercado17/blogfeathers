@@ -1,5 +1,6 @@
 const { authenticate } = require('@feathersjs/authentication').hooks;
 const { fastJoin, disallow } = require("feathers-hooks-common");
+const registerBlog = require("./hooks/register-blog")
 
 const joinsResolves = {
   joins: {
@@ -20,7 +21,7 @@ module.exports = {
     all: [],
     find: [],
     get: [],
-    create: [authenticate('jwt')],
+    create: [authenticate('jwt'), registerBlog()],
     update: [authenticate('jwt')],
     patch: [authenticate('jwt')],
     remove: [authenticate('jwt')]

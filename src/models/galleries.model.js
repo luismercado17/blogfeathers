@@ -17,7 +17,7 @@ module.exports = function (app) {
       allowNull: false
     },
     gallery_image: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false
     }
   }, {
